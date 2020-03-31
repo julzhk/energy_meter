@@ -65,7 +65,7 @@ class ShowUploadForm extends Component {
 
 class App extends Component {
     state = {
-        stage: 4,
+        stage: 1,
         count: 0
     }
 
@@ -77,6 +77,7 @@ class App extends Component {
         const formData = new FormData();
         let csrftoken = Cookies.get('csrftoken');
         formData.append("file", file);
+        formData.append("stage", this.state.stage);
         axios.post(
             "/api",
             formData, { // receive two parameter endpoint url ,form data

@@ -6,6 +6,9 @@ from django.http import JsonResponse, HttpResponseForbidden, HttpResponseBadRequ
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from uploader.models import RawData
+import datetime
+from django.utils import timezone
+
 
 
 def home(request):
@@ -15,7 +18,8 @@ def home(request):
 def api(request):
     if request.FILES:
         file_readlines, filename = extract_file_data(request)
-        count = store_data(file_readlines, filename)
+        stage = request.POST.get('stage',None)
+        count = store_data(file_readlines, filename, stage)
         return JsonResponse({'count':count})
     return HttpResponseForbidden()
 
@@ -26,11 +30,14 @@ def extract_file_data(request):
     file_readlines = io_file.readlines()
     return file_readlines, filename
 
-def store_data(file_readlines, filename):
+def store_data(file_readlines, filename, stage):
     uploaded_data_list = []
-    now = datetime.datetime.now()
+    now = timezone.now()
     for line in file_readlines:
-        uploaded_data_list.append(RawData(data=line, filename=filename, timestamp=now))
+        uploaded_data_list.append(RawData(data=line,
+                                          filename=filename,
+                                          timestamp=now,
+                                          stage=int(stage)))
     RawData.objects.bulk_create(uploaded_data_list)
     return len(uploaded_data_list)
 
