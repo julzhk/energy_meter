@@ -218,3 +218,4 @@ dmypy.json
 
 /.idea/
 /node_modules/
+/assets/bundles/index.html
