@@ -51,5 +51,7 @@ http://0.0.0.0:8000/admin/
 use: 'admin' and 'password1234'
 
 
+docker build -t gcr.io/energymeter/uploader:latest .
+
 
 
