@@ -27,13 +27,20 @@ class RawData(models.Model):
 
 
 class Building(models.Model):
-    uid = models.IntegerField(primary_key=True)
+    uid = models.IntegerField()
     name = models.CharField(max_length=256)
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class Meter(models.Model):
     uid = models.IntegerField(primary_key=True)
+    building_uid = models.IntegerField()
     building = models.ForeignKey(Building, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.uid} in {self.building}"
 
 
 class Consumption(models.Model):

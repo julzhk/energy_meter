@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
-import {Button, Form, Segment} from 'semantic-ui-react'
+import {Button, Form, Grid, Segment} from 'semantic-ui-react'
 
 import {render} from "react-dom";
 import axios from 'axios';
-import 'chart.js'
 import Cookies from 'js-cookie'
 import {LoaderSpinner} from "./UI/LoaderSpinner";
 import {ErrorHandler} from "./UI/ErrorHandler";
+import {TimeSeries} from "pondjs";
+import {BandChart, ChartContainer, ChartRow, Charts, LineChart, Resizable, styler, YAxis} from "react-timeseries-charts";
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -61,7 +62,6 @@ class ShowUploadForm extends Component {
         }
     }
 }
-
 
 class App extends Component {
     state = {
@@ -131,4 +131,148 @@ class App extends Component {
 
 }
 
-render(<App/>, document.getElementById('app'));
+class DataRender extends Component {
+    render() {
+        const data = this.props.data
+        if (data.length > 0) {
+            return this.render_chart(data)
+        } else {
+            return null
+        }
+    }
+
+    render_chart(data) {
+        const series = new TimeSeries({
+            name: "series",
+            columns: ["index", "t", "median"],
+            points: data.map(({date, val}) => [
+                date, [val * 0.85, val, val * 1.15], val
+            ])
+        });
+        let vals = data.map((date, val)=>{return(date['val'])})
+        console.log(vals)
+        const max_val = Math.max( ...vals )
+        const style = styler([
+            {key: "t", color: "steelblue", width: 1, opacity: 1},
+            {key: "median", color: "#333", width: 1}
+        ]);
+        return (
+            <Resizable>
+                <ChartContainer timeRange={series.range()}>
+                    <ChartRow height="500">
+                        <YAxis
+                            id="t-axis"
+                            label="consumption"
+                            min={0}
+                            max={max_val}
+                            format="d"
+                            width="70"
+                            type="linear"
+                        />
+                        <Charts>
+                            <BandChart
+                                axis="t-axis"
+                                style={style}
+                                spacing={1}
+                                column="t"
+                                interpolation="curveBasis"
+                                series={series}
+                            />
+                            <LineChart
+                                axis="t-axis"
+                                style={style}
+                                spacing={1}
+                                columns={["median"]}
+                                interpolation="curveBasis"
+                                series={series}
+                            />
+                        </Charts>
+                    </ChartRow>
+                </ChartContainer>
+            </Resizable>
+        )
+    }
+};
+
+class Results extends Component {
+    state = {
+        data: [],
+        chart_data: [],
+        upddating: false,
+        uploaderror: false
+    }
+
+    componentDidMount() {
+        axios.get(
+            "/data_api"
+        ).then(res => {
+            this.setState({
+                data: res.data,
+                updating: false
+            })
+        }).catch((error) => {
+            this.setState({uploaderror: true, updating: false, data: []})
+            console.log(error)
+        })
+    }
+
+    buttonClicked(ele) {
+        console.log(ele)
+        axios.get(
+            "/data_api?id=" + ele
+        ).then(res => {
+            console.log(res)
+            this.setState({
+                chart_data: res.data,
+                updating: false
+            })
+        }).catch((error) => {
+            this.setState({uploaderror: true, updating: false, chart_data: []})
+            console.log(error)
+        })
+
+    }
+
+    render() {
+        const data = this.state.data
+        const chart_data = this.state.chart_data
+        return (
+            <div>
+                <Grid columns={4} divided>
+                    <Grid.Row>
+                        {data.map((ele, indx) => {
+                            return (
+                                <Grid.Column key={indx}>
+                                    <Button onClick={() => {
+                                        this.buttonClicked(ele[0])
+                                    }} content={ele[1]}/>
+                                </Grid.Column>
+                            )
+                        })}
+                    </Grid.Row>
+                </Grid>
+                <Grid columns={1} divided>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <DataRender data={chart_data}/>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+            </div>
+
+
+        );
+    }
+}
+
+try {
+    render(<App/>, document.getElementById('app'));
+} catch (Err) {
+    console.log(Err)
+}
+try {
+    render(<Results/>, document.getElementById('results'));
+} catch (Err) {
+    console.log(Err)
+}
+
