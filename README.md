@@ -32,3 +32,24 @@ then a list of meters for each building with hyperlinks etc.
 feel is useful (using a third-party library is fine). 
 e.g: it could be to plot the half hourly data for each meter in a line chart, 
 or perhaps sum the energy consumption per day across every hotel and draw a bar chart. 
+
+
+To run:
+===
+from this folder:
+``` 
+docker build .
+docker-compose up
+```
+
+should run the app on: http://0.0.0.0:8000/
+
+To view Django admin to see successfully uploaded data:
+
+http://0.0.0.0:8000/admin/
+
+use: 'admin' and 'password1234'
+
+
+
+
