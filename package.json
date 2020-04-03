@@ -6,7 +6,9 @@
   "scripts": {
     "test": "jest --watchAll",
     "go": "webpack-dev-server --hot --watch",
-    "start": "./node_modules/.bin/webpack --config webpack.config.js --watch"
+    "start": "./node_modules/.bin/webpack --config webpack.config.js --watch",
+    "watch": "./node_modules/.bin/webpack --config webpack.config.js --watch",
+    "build": "./node_modules/.bin/webpack --config webpack.config.js"
   },
   "author": "",
   "license": "ISC",

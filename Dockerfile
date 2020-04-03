@@ -9,13 +9,13 @@ ENV PYTHONUNBUFFERED 1
 RUN mkdir /code
 WORKDIR /code
 
-# Install dependencies
-COPY ./package.json /code/
-COPY requirements.txt /code/
-RUN pip install -r requirements.txt
-RUN npm install
-
 # Copy project
 COPY . /code/
+RUN pip install -r /code/requirements.txt
+RUN npm install
+RUN pwd
+RUN ls
+RUN npm run build
 
-RUN python /code/manage.py migrate
+
+RUN python manage.py migrate
