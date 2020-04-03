@@ -1,8 +1,3 @@
-try:
-    import django_heroku
-except:
-    pass
-
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -105,7 +100,3 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
     }
 }
-try:
-    django_heroku.settings(locals())
-except:
-    pass
