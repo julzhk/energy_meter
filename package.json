@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --watchAll",
     "go": "webpack-dev-server --hot --watch",
-    "start": "./node_modules/.bin/webpack --config webpack.config.js --watch"
+    "start": "./node_modules/.bin/webpack --config webpack.config.js --watch",
+    "docker-start": "./node_modules/.bin/webpack --config webpack.config.js"
   },
   "author": "",
   "license": "ISC",

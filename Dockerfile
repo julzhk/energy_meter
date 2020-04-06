@@ -15,7 +15,7 @@ COPY requirements.txt /code/
 RUN pip install -r requirements.txt
 RUN npm install
 
+
 # Copy project
 COPY . /code/
 
-RUN python /code/manage.py migrate
