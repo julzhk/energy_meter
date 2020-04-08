@@ -36,18 +36,32 @@ or perhaps sum the energy consumption per day across every hotel and draw a bar 
 
 To run:
 ===
-from this folder:
+
+The docker way
+---
+With docker: from this folder:
 ``` 
 docker-compose up
 ```
 
-should run the app on: http://0.0.0.0:8000/
+The Venv way
+---
+
+Alternatively: create a virtual environment and
+```
+pip install -r requirements.txt
+npm init
+npm run docker-start
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
+```
+
+
+Both should run the app on: http://0.0.0.0:8000/
 
 To view Django admin to see successfully uploaded data:
 
 http://0.0.0.0:8000/admin/
-
-use: 'admin' and 'password1234'
 
 
 
