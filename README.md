@@ -62,8 +62,3 @@ Both should run the app on: http://0.0.0.0:8000/
 To view Django admin to see successfully uploaded data:
 
 http://0.0.0.0:8000/admin/
-
-
-
-
-
